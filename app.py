@@ -97,7 +97,7 @@ def display_pdf(pdf_path):
 def display_review_form(title, review_data, review_type):
     """Displays a parsed review as a form with rating dropdowns."""
     st.markdown(f"#### {title}")
-    rating_options = ["--- Select ---", "Valid", "Factual Error", "Redundant Critique", "Irrelevant"]
+    rating_options = ["--- Select ---", "Completely Agree", "Mostly Agree", "Mostly Disagree", "Completely Disagree"]
     with st.container(border=True):
         if review_data.get("Summary"):
             st.markdown("**Summary**")
