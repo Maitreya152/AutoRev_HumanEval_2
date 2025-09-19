@@ -1,10 +1,7 @@
 import streamlit as st
 import pandas as pd
 import json
-<<<<<<< HEAD
 import base64
-=======
->>>>>>> ca00c6fcd1ceb1afcfc5fc126537dc19723ac44f
 import os
 import re
 import random
@@ -80,33 +77,27 @@ def parse_review(review_text):
 
 # --- Display Functions ---
 def display_pdf(pdf_path):
-    """Displays a PDF file and provides a download button."""
+    """Displays a PDF file in the Streamlit app."""
     if not os.path.exists(pdf_path):
         st.error(f"PDF not found at path: {pdf_path}")
         return
     try:
-        # Provide a download button for the PDF
-        with open(pdf_path, "rb") as pdf_file:
-            pdf_bytes = pdf_file.read()
-
-        st.download_button(
-            label="Download PDF",
-            data=pdf_bytes,
-            file_name=os.path.basename(pdf_path),
-            mime="application/pdf"
-        )
-        
-        # Use st.pdf() which is more robust and efficient for large files.
-        st.pdf(pdf_path, height=1000)
-
+        with open(pdf_path, "rb") as f:
+            base64_pdf = base64.b64encode(f.read()).decode('utf-8')
+        # Embed the PDF in the center of the page
+        pdf_display = f'''
+        <div style="display: flex; justify-content: center;">
+            <iframe src="data:application/pdf;base64,{base64_pdf}" width="800" height="1000" type="application/pdf"></iframe>
+        </div>
+        '''
+        st.markdown(pdf_display, unsafe_allow_html=True)
     except Exception as e:
-        st.error(f"Failed to display or provide download for PDF. Reason: {e}")
-
+        st.error(f"Failed to display PDF. Reason: {e}")
 
 def display_review_form(title, review_data, review_type):
     """Displays a parsed review as a form with rating dropdowns."""
     st.markdown(f"#### {title}")
-    rating_options = ["--- Select ---", "Completely Disagree", "Mostly Disagree", "Mostly Agree", "Completely Agree"]
+    rating_options = ["--- Select ---", "Valid", "Factual Error", "Redundant Critique", "Irrelevant"]
     with st.container(border=True):
         if review_data.get("Summary"):
             st.markdown("**Summary**")
